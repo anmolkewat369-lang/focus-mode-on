@@ -1,0 +1,6 @@
+{
+  "name": "TimeFlow",
+  "description": "Plan realistically, start tasks immediately, recover gracefully when plans change, and learn from actual time tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
