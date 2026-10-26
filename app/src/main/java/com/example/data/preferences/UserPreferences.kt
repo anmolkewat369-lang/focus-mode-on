@@ -13,7 +13,7 @@ data class UserSettings(
     val preferredFocusMinutes: Int = 25,
     val preferredBreakMinutes: Int = 5,
     val bufferMinutes: Int = 10,
-    val isDarkTheme: Boolean? = null, // null = system
+    val isDarkTheme: Boolean = false, // false = Light Mode (default)
     val onboardingCompleted: Boolean = false,
     val categories: List<String> = listOf("Work", "Study", "Personal", "Health", "Deep Work"),
     val hapticsEnabled: Boolean = true
@@ -33,8 +33,7 @@ class UserPreferences(context: Context) {
         val focusMin = prefs.getInt("focus_min", 25)
         val breakMin = prefs.getInt("break_min", 5)
         val bufferMin = prefs.getInt("buffer_min", 10)
-        val hasDark = prefs.contains("is_dark_theme")
-        val isDark = if (hasDark) prefs.getBoolean("is_dark_theme", false) else null
+        val isDark = prefs.getBoolean("is_dark_theme", false)
         val onboarding = prefs.getBoolean("onboarding_completed", false)
         val categoriesStr = prefs.getString("categories", "Work,Study,Personal,Health,Deep Work")
             ?: "Work,Study,Personal,Health,Deep Work"
@@ -66,11 +65,7 @@ class UserPreferences(context: Context) {
             putInt("focus_min", updated.preferredFocusMinutes)
             putInt("break_min", updated.preferredBreakMinutes)
             putInt("buffer_min", updated.bufferMinutes)
-            if (updated.isDarkTheme == null) {
-                remove("is_dark_theme")
-            } else {
-                putBoolean("is_dark_theme", updated.isDarkTheme)
-            }
+            putBoolean("is_dark_theme", updated.isDarkTheme)
             putBoolean("onboarding_completed", updated.onboardingCompleted)
             putString("categories", updated.categories.joinToString(","))
             putBoolean("haptics_enabled", updated.hapticsEnabled)

@@ -556,8 +556,14 @@ class TimeFlowViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun updateThemePreference(isDark: Boolean?) {
+    fun updateThemePreference(isDark: Boolean) {
         userPreferences.updateSettings { it.copy(isDarkTheme = isDark) }
+        showSnackbar(if (isDark) "Switched to Dark Mode" else "Switched to Light Mode")
+    }
+
+    fun toggleTheme() {
+        val newTheme = !userSettings.value.isDarkTheme
+        updateThemePreference(newTheme)
     }
 
     fun updatePlanningPreferences(

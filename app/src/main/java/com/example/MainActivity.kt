@@ -68,8 +68,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val userSettings by viewModel.userSettings.collectAsStateWithLifecycle()
-            val systemDark = isSystemInDarkTheme()
-            val useDark = userSettings.isDarkTheme ?: systemDark
+            val useDark = userSettings.isDarkTheme
 
             TimeFlowTheme(darkTheme = useDark) {
                 if (!userSettings.onboardingCompleted) {
@@ -186,7 +185,8 @@ fun TimeFlowApp(viewModel: TimeFlowViewModel) {
                         onOpenCreateTask = { viewModel.openCreateTaskDialog() },
                         onOpenSmartPlanner = { viewModel.openSmartPlanner() },
                         onOpenRecoveryPlanner = { viewModel.openRecoveryPlanner() },
-                        onOpenDailyReview = { viewModel.openDailyReview() }
+                        onOpenDailyReview = { viewModel.openDailyReview() },
+                        onToggleTheme = { viewModel.toggleTheme() }
                     )
                     AppScreen.TASKS -> TasksScreen(
                         tasks = tasks,

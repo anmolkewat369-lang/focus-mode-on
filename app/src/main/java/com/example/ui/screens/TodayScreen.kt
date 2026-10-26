@@ -42,6 +42,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material3.IconButton
 import androidx.compose.ui.unit.sp
 import com.example.data.model.TaskEntity
 import com.example.data.preferences.UserSettings
@@ -65,7 +68,8 @@ fun TodayScreen(
     onOpenCreateTask: () -> Unit,
     onOpenSmartPlanner: () -> Unit,
     onOpenRecoveryPlanner: () -> Unit,
-    onOpenDailyReview: () -> Unit
+    onOpenDailyReview: () -> Unit,
+    onToggleTheme: () -> Unit
 ) {
     val todayDate = remember { DateUtils.getTodayDate() }
     val todayTasks = tasks.filter { it.scheduledDate == todayDate || (it.scheduledDate == null && !it.isCompleted) }
@@ -111,19 +115,42 @@ fun TodayScreen(
                         )
                     }
 
-                    // Smart Plan Day Button
-                    FilledTonalButton(
-                        onClick = onOpenSmartPlanner,
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.testTag("smart_plan_button")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.AutoAwesome,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Auto Plan", style = MaterialTheme.typography.labelMedium)
+                        Surface(
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = Modifier.testTag("theme_toggle_button")
+                        ) {
+                            IconButton(
+                                onClick = onToggleTheme,
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Icon(
+                                    imageVector = if (!userSettings.isDarkTheme) Icons.Default.DarkMode else Icons.Default.LightMode,
+                                    contentDescription = if (!userSettings.isDarkTheme) "Switch to Dark Mode" else "Switch to Light Mode",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+
+                        // Smart Plan Day Button
+                        FilledTonalButton(
+                            onClick = onOpenSmartPlanner,
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.testTag("smart_plan_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AutoAwesome,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Auto Plan", style = MaterialTheme.typography.labelMedium)
+                        }
                     }
                 }
             }

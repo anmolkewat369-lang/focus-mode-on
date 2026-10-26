@@ -61,7 +61,7 @@ import com.example.ui.theme.FlowRose
 @Composable
 fun SettingsScreen(
     userSettings: UserSettings,
-    onUpdateTheme: (Boolean?) -> Unit,
+    onUpdateTheme: (Boolean) -> Unit,
     onUpdatePlanningPreferences: (startMin: Int, endMin: Int, focusMin: Int, breakMin: Int, bufferMin: Int) -> Unit,
     onAddCategory: (String) -> Unit,
     onExportData: () -> Unit,
@@ -109,32 +109,51 @@ fun SettingsScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Default.Brightness4, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text("Theme Appearance", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
-                }
-                Spacer(modifier = Modifier.height(12.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                        Icon(
+                            imageVector = if (!userSettings.isDarkTheme) Icons.Default.Brightness4 else Icons.Default.Brightness4,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = if (!userSettings.isDarkTheme) "Light Mode (Active)" else "Dark Mode (Active)",
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                            )
+                            Text(
+                                text = if (!userSettings.isDarkTheme) "Calm, clean light aesthetic" else "Soft, deep-slate dark palette",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    Switch(
+                        checked = !userSettings.isDarkTheme,
+                        onCheckedChange = { isLight -> onUpdateTheme(!isLight) },
+                        modifier = Modifier.testTag("light_mode_switch")
+                    )
+                }
+                Spacer(modifier = Modifier.height(14.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     FilterChip(
-                        selected = userSettings.isDarkTheme == null,
-                        onClick = { onUpdateTheme(null) },
-                        label = { Text("System") },
-                        modifier = Modifier.weight(1f).testTag("theme_system_chip")
-                    )
-                    FilterChip(
-                        selected = userSettings.isDarkTheme == false,
+                        selected = !userSettings.isDarkTheme,
                         onClick = { onUpdateTheme(false) },
-                        label = { Text("Light") },
+                        label = { Text("Light Mode") },
                         modifier = Modifier.weight(1f).testTag("theme_light_chip")
                     )
                     FilterChip(
-                        selected = userSettings.isDarkTheme == true,
+                        selected = userSettings.isDarkTheme,
                         onClick = { onUpdateTheme(true) },
-                        label = { Text("Dark") },
+                        label = { Text("Dark Mode") },
                         modifier = Modifier.weight(1f).testTag("theme_dark_chip")
                     )
                 }
